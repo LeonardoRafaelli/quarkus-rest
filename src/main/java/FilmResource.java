@@ -1,6 +1,7 @@
 import io.vertx.codegen.annotations.ProxyClose;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
@@ -8,6 +9,7 @@ import org.quarkus_study.app.model.Film;
 import repository.FilmRepository;
 
 import java.awt.*;
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -43,10 +45,10 @@ public class FilmResource {
     }
 
     @GET
-    @Path("/actors/{startsWith}")
+    @Path("/actors/{startsWith}/{minLength}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String actors(String startsWith){
-        return filmRepository.actors(startsWith)
+    public String actors(String startsWith, short minLength){
+        return filmRepository.actors(startsWith, minLength)
                 .map(f -> String.format("%s (%d min) - %s",
                         f.getTitle(),
                         f.getLength(),
@@ -54,6 +56,18 @@ public class FilmResource {
                                 a -> String.format("%s %s", a.getFirstName(), a.getLastName()))
                                 .collect(Collectors.joining(", "))
                         )).collect(Collectors.joining("\n"));
+    }
+
+
+    @PUT
+    @Path("/rentalRate/{minLength}/{newRentalRate}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String updateRentalRate (short minLength, BigDecimal newRentalRate) {
+        filmRepository.updateRentalRate(minLength, newRentalRate);
+
+        return filmRepository.getFilms(minLength)
+                .map(f -> String.format("%s (%d min) - %f", f.getTitle(), f.getLength(), f.getRentalRate()))
+                .collect(Collectors.joining("\n"));
     }
 
 }

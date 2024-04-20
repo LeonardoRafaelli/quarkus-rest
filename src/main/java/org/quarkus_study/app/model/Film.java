@@ -5,9 +5,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 // @Basic - Persists the data in the DB as a basic type
 
@@ -24,13 +22,19 @@ public class Film {
         this.length = length;
     }
 
+    public Film(short filmId, String title, short length, BigDecimal rentalRate){
+        this.filmId = filmId;
+        this.title = title;
+        this.length = length;
+        this.rentalRate = rentalRate;
+    }
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "film_id")
     private Short filmId;
     @Basic
     @Column(name = "title")
-
     private String title;
     @Basic
     @Column(name = "description")
