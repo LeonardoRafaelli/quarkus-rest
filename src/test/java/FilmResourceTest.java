@@ -15,4 +15,5 @@ public class FilmResourceTest {
                 .statusCode(200)
                 .body(containsString("AFRICAN EGG"));
     }
+
 }
